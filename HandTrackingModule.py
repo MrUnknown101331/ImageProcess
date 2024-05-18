@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
+import math
 
 
 class HandDetector:
@@ -34,7 +35,11 @@ class HandDetector:
     def fingers_up(self, lm_list):
         fingers = []
         # Thumb
-        if lm_list[self.tipIds[0]][1] > lm_list[self.tipIds[0] - 1][1]:
+        if lm_list[5][1] < lm_list[9][1]:
+            condition = lm_list[self.tipIds[0]][1] < lm_list[self.tipIds[0] - 1][1]
+        else:
+            condition = lm_list[self.tipIds[0]][1] > lm_list[self.tipIds[0] - 1][1]
+        if condition:
             fingers.append(1)
         else:
             fingers.append(0)
@@ -45,6 +50,18 @@ class HandDetector:
             else:
                 fingers.append(0)
         return fingers
+
+    def find_distance(self, p1, p2, image, lm_list, draw=True, r=15, t=3):
+        x1, y1 = lm_list[p1][1:]
+        x2, y2 = lm_list[p2][1:]
+        length = math.hypot(x2 - x1, y2 - y1)
+        cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+        if draw:
+            cv2.line(image, (x1, y1), (x2, y2), (255, 0, 255), t)
+            cv2.circle(image, (x1, y1), r, (255, 0, 255), cv2.FILLED)
+            cv2.circle(image, (x2, y2), r, (255, 0, 255), cv2.FILLED)
+            cv2.circle(image, (cx, cy), r, (0, 0, 255), cv2.FILLED)
+        return length, image, [x1, y1, x2, y2, cx, cy]
 
 
 if __name__ == "__main__":

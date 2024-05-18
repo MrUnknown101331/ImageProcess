@@ -1,8 +1,6 @@
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-devices = AudioUtilities.GetSpeakers()
-interface = devices.Activate(
-    IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-volume = interface.QueryInterface(IAudioEndpointVolume)
+from screeninfo import get_monitors
 
-volume.SetMasterVolumeLevel(0.0, None)
+monitors = get_monitors()
+wScreen, hScreen = monitors[0].width, monitors[0].height
+
+print(wScreen, hScreen)
