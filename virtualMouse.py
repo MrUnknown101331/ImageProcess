@@ -8,12 +8,12 @@ from HandTrackingModule import HandDetector
 wCam, hCam = 640, 480
 p_time = 0
 frameR = 120
-shiftUp = 20
+shiftUp = 60
 smoothFactor = 8
 pLocX, pLocY = 0, 0
 clicked = False
 
-detector = HandDetector(max_hands=1)
+detector = HandDetector(max_hands=1, track_conf=0.7)
 mouse = Controller()
 monitors = get_monitors()
 wScreen, hScreen = monitors[0].width, monitors[0].height
@@ -48,8 +48,7 @@ while True:
                 if dist <= 35:
                     cv2.circle(img, (points[4], points[5]), 15, (0, 255, 0), cv2.FILLED)
                     if not clicked:
-                        mouse.press(Button.left)
-                        mouse.release(Button.left)
+                        mouse.click(Button.left)
                         clicked = True
                 else:
                     if clicked:
